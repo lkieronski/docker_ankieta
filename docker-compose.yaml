@@ -1,0 +1,32 @@
+version: '3'
+services:
+        ankieta3:
+                build: ./ankieta              
+                ports: 
+                        - "80:80"
+                volumes:
+                        - ./ankieta/app/:/var/www/html
+                environment:
+                        SQL_HOST: mysql-db2
+                        SQL_DB: ankieta
+                        SQL_USER: root 
+                        SQL_PASS: secret
+                        APP_USER: admin
+                        APP_PASS: admin
+                links:
+                        - mysql-db2
+                depends_on:
+                        - mysql-db2
+        mysql-db2:
+                build: ./mysqldb
+                command: --character-set-server=utf8 --collation-server=utf8_polish_ci --default-authentication-plugin=mysql_native_password
+                volumes:
+                        - mysqldata:/var/lib/mysql
+                environment:
+                        MYSQL_ROOT_PASSWORD: secret
+        adminer3:
+                image: adminer
+                ports:
+                        - "8080:8080"
+volumes:
+        mysqldata:        
